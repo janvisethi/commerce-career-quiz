@@ -1,138 +1,245 @@
+import React, { useState, useRef } from 'react';
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Which Commerce Career Suits You Best?</title>
-  <style>
-    body { font-family: Arial; padding: 20px; max-width: 800px; margin: auto; background: #f9f9f9; }
-    h2 { color: #2b2b2b; }
-    .question { margin-bottom: 20px; }
-    .result { margin-top: 30px; padding: 20px; background: #dff0d8; border-left: 5px solid #3c763d; }
-    button { padding: 10px 20px; font-size: 16px; margin-top: 20px; }
-  </style>
-</head>
-<body>
-
-<h1>Which Commerce Career Suits You Best?</h1>
-<p>Answer the following questions to find out your ideal career path in commerce.</p>
-
-<form id="careerQuiz">
-  <div class="question">
-    <h2>1. Which activity sounds most interesting to you?</h2>
-    <label><input type="radio" name="q1" value="A"> Keeping track of expenses and preparing budgets</label><br>
-    <label><input type="radio" name="q1" value="B"> Talking to people and convincing them of your ideas</label><br>
-    <label><input type="radio" name="q1" value="C"> Understanding how laws and taxes work</label><br>
-    <label><input type="radio" name="q1" value="D"> Finding new ways to earn money or start something of your own</label>
-  </div>
-
-  <div class="question">
-    <h2>2. If you had a school project, which part would you enjoy the most?</h2>
-    <label><input type="radio" name="q2" value="A"> Making charts and calculating figures</label><br>
-    <label><input type="radio" name="q2" value="B"> Presenting ideas to the class</label><br>
-    <label><input type="radio" name="q2" value="C"> Researching rules and regulations</label><br>
-    <label><input type="radio" name="q2" value="D"> Coming up with a brand name and logo</label>
-  </div>
-
-  <div class="question">
-    <h2>3. Which subject do you enjoy the most?</h2>
-    <label><input type="radio" name="q3" value="A"> Accountancy</label><br>
-    <label><input type="radio" name="q3" value="B"> Business Studies</label><br>
-    <label><input type="radio" name="q3" value="C"> Economics</label><br>
-    <label><input type="radio" name="q3" value="D"> A mix, especially thinking outside the box</label>
-  </div>
-
-  <div class="question">
-    <h2>4. What do your friends say you’re good at?</h2>
-    <label><input type="radio" name="q4" value="A"> Being organized and detail-oriented</label><br>
-    <label><input type="radio" name="q4" value="B"> Speaking confidently and leading a team</label><br>
-    <label><input type="radio" name="q4" value="C"> Giving logical advice or solving tough problems</label><br>
-    <label><input type="radio" name="q4" value="D"> Thinking creatively or coming up with new ideas</label>
-  </div>
-
-  <div class="question">
-    <h2>5. How do you solve a problem?</h2>
-    <label><input type="radio" name="q5" value="A"> Step-by-step using logic</label><br>
-    <label><input type="radio" name="q5" value="B"> By discussing it with others</label><br>
-    <label><input type="radio" name="q5" value="C"> By checking what the rules say</label><br>
-    <label><input type="radio" name="q5" value="D"> By trying something new and creative</label>
-  </div>
-
-  <div class="question">
-    <h2>6. You are assigned a group project. What role do you prefer?</h2>
-    <label><input type="radio" name="q6" value="A"> Handling the planning, data, or budget</label><br>
-    <label><input type="radio" name="q6" value="B"> Speaking and representing the team</label><br>
-    <label><input type="radio" name="q6" value="C"> Making sure the group follows the rules</label><br>
-    <label><input type="radio" name="q6" value="D"> Leading and bringing new ideas</label>
-  </div>
-
-  <div class="question">
-    <h2>7. Which of these excites you the most?</h2>
-    <label><input type="radio" name="q7" value="A"> Working in accounts or finance</label><br>
-    <label><input type="radio" name="q7" value="B"> Marketing or managing a team</label><br>
-    <label><input type="radio" name="q7" value="C"> Giving financial or legal advice</label><br>
-    <label><input type="radio" name="q7" value="D"> Running your own business</label>
-  </div>
-
-  <div class="question">
-    <h2>8. Which place would you like to work?</h2>
-    <label><input type="radio" name="q8" value="A"> A bank or accounting firm</label><br>
-    <label><input type="radio" name="q8" value="B"> A creative office with lots of people</label><br>
-    <label><input type="radio" name="q8" value="C"> A legal or tax consulting office</label><br>
-    <label><input type="radio" name="q8" value="D"> Your own business or a startup</label>
-  </div>
-
-  <div class="question">
-    <h2>9. What kind of work gives you satisfaction?</h2>
-    <label><input type="radio" name="q9" value="A"> Accuracy and neatness in numbers</label><br>
-    <label><input type="radio" name="q9" value="B"> Appreciation from people</label><br>
-    <label><input type="radio" name="q9" value="C"> Solving complex problems</label><br>
-    <label><input type="radio" name="q9" value="D"> Creating something unique</label>
-  </div>
-
-  <button type="button" onclick="showResult()">Submit</button>
-</form>
-
-<div id="result" class="result" style="display:none;"></div>
-
-<script>
-  function showResult() {
-    const answers = Array.from(document.querySelectorAll('input[type=radio]:checked')).map(input => input.value);
-    if (answers.length < 9) {
-      alert("Please answer all questions before submitting.");
-      return;
+const questions = [
+  {
+    question: "When working in a group project, you usually:",
+    options: {
+      A: "Handle the planning and make sense of numbers",
+      B: "Design the presentation and think of catchy ideas",
+      C: "Make sure everyone is heard and things are fair",
+      D: "Come up with creative but logical solutions"
     }
-
-    const count = { A: 0, B: 0, C: 0, D: 0 };
-    answers.forEach(ans => count[ans]++);
-
-    const topAnswer = Object.keys(count).reduce((a, b) => count[a] > count[b] ? a : b);
-    const resultBox = document.getElementById("result");
-    resultBox.style.display = "block";
-
-    let career = "", description = "";
-
-    switch (topAnswer) {
-      case "A":
-        career = "Accountant / Financial Analyst";
-        description = "You enjoy structure, numbers, and analysis. A career in accounting or finance suits you well.";
-        break;
-      case "B":
-        career = "Marketing / HR Executive";
-        description = "You're great with people and communication. A career in marketing or HR is ideal for you.";
-        break;
-      case "C":
-        career = "Tax Consultant / Legal Advisor";
-        description = "You're logical and enjoy solving rule-based problems. Law or taxation might be your path.";
-        break;
-      case "D":
-        career = "Entrepreneur / Business Owner";
-        description = "You're creative and love innovation. You might thrive in entrepreneurship or start-ups.";
-        break;
+  },
+  {
+    question: "Which of these sounds most fun to you?",
+    options: {
+      A: "Tracking your spending and saving using a money app",
+      B: "Making Instagram reels or designing posters",
+      C: "Leading a campaign about sustainability in your school",
+      D: "Solving puzzles, patterns, or Sudoku"
     }
-
-    resultBox.innerHTML = `<h2>Your Ideal Commerce Career: ${career}</h2><p>${description}</p>`;
+  },
+  {
+    question: "Imagine your dream job — which sounds most like you?",
+    options: {
+      A: "Helping a company earn more money wisely",
+      B: "Creating cool ads that go viral",
+      C: "Making businesses more eco-friendly and ethical",
+      D: "Analyzing data to make smart decisions"
+    }
+  },
+  {
+    question: "What’s your favorite type of subject?",
+    options: {
+      A: "Business, accounts, or economics",
+      B: "English, art, or media",
+      C: "Sociology, psychology, or environment",
+      D: "Math, computers, or science"
+    }
+  },
+  {
+    question: "If you had ₹1,00,000 to start something, what would you do?",
+    options: {
+      A: "Invest in stocks or start a small finance business",
+      B: "Start a YouTube or online clothing brand",
+      C: "Fund a cause you care about and make it public",
+      D: "Build a tech-based app or online tool"
+    }
+  },
+  {
+    question: "What’s your dream work vibe?",
+    options: {
+      A: "Suited up, in a business meeting",
+      B: "Casual wear, creating content",
+      C: "In nature or working on real-world problems",
+      D: "Laptop + headphones, solving things in peace"
+    }
+  },
+  {
+    question: "Your teachers often say you are:",
+    options: {
+      A: "Smart with numbers",
+      B: "Imaginative and expressive",
+      C: "Honest and kind",
+      D: "Curious and logical"
+    }
+  },
+  {
+    question: "What would you do after seeing a business fail?",
+    options: {
+      A: "Analyze the financial mistakes",
+      B: "Redesign their branding and story",
+      C: "Check if they were harming society",
+      D: "Use data to understand what went wrong"
+    }
+  },
+  {
+    question: "Which headline grabs your attention?",
+    options: {
+      A: "Teen Invests ₹5000, Grows to ₹50,000!",
+      B: "How One Reels Trend Made This Brand Famous",
+      C: "This Start-up Plants Trees for Every Sale",
+      D: "AI Predicts What You’ll Buy Next"
+    }
+  },
+  {
+    question: "What would you love to learn more about?",
+    options: {
+      A: "How businesses earn, grow, and manage money",
+      B: "How to build a personal brand or run campaigns",
+      C: "How companies can care for people & the planet",
+      D: "How AI, numbers, and tech power smart business"
+    }
+  },
+  {
+    question: "True or False: I enjoy calculating profits and taxes.",
+    options: {
+      A: "True",
+      B: "False"
+    }
+  },
+  {
+    question: "Slider: Rate your interest in designing (0 = not at all, 10 = love it)",
+    type: "slider",
+    key: "B"
+  },
+  {
+    question: "True or False: Ethics are more important than profits.",
+    options: {
+      C: "True",
+      A: "False"
+    }
+  },
+  {
+    question: "Slider: How much do you enjoy working with data (0 = not at all, 10 = love it)?",
+    type: "slider",
+    key: "D"
+  },
+  {
+    question: "True or False: I like following trends and making viral content.",
+    options: {
+      B: "True",
+      C: "False"
+    }
   }
-</script>
+];
 
-</body>
-</html>
+const results = {
+  A: {
+    title: "Finance Wizard 🧮",
+    description: "You’re the kind of person who understands money talks and balance sheets like poetry. You’d thrive in the world of finance, where logic meets leadership!",
+    roles: ["Financial Analyst", "Investment Banker", "Chartered Accountant", "FinTech Consultant"],
+    salary: "₹4–12 LPA (Average)",
+    citation: "Source: National Stock Exchange of India",
+    link: "https://www.nseindia.com/"
+  },
+  B: {
+    title: "Creative Marketer 🎨",
+    description: "You’ve got the vibe, the voice, and the vision! You shine in storytelling, trends, and turning brands into blockbusters.",
+    roles: ["Digital Marketer", "Brand Strategist", "Content Creator"],
+    salary: "₹3–8 LPA (Average)",
+    citation: "Source: UpGrad India",
+    link: "https://www.upgrad.com/blog/digital-marketing-salary-in-india"
+  },
+  C: {
+    title: "Ethical Leader 🌱",
+    description: "You care deeply about impact and ethics. You’re born to lead purpose-driven organizations and shape sustainable business futures.",
+    roles: ["ESG Analyst", "CSR Officer", "Sustainability Consultant"],
+    salary: "₹5–10 LPA (Average)",
+    citation: "Source: Zell Education India",
+    link: "https://www.zelleducation.com/blog/what-salaries-and-job-roles-can-i-expect-in-esg"
+  },
+  D: {
+    title: "Data-Driven Thinker 🧠",
+    description: "You love solving puzzles and uncovering truths through tech and numbers. The future of commerce needs minds like yours!",
+    roles: ["Business Analyst", "Data Analyst", "Tech-Savvy Accountant"],
+    salary: "₹6–14 LPA (Average)",
+    citation: "Source: Indeed India",
+    link: "https://in.indeed.com/career/business-analyst/salaries"
+  }
+};
+
+export default function CommerceCareerQuiz() {
+  const [answers, setAnswers] = useState([]);
+  const [showResult, setShowResult] = useState(false);
+
+  const handleAnswer = (option, sliderKey = null) => {
+    if (sliderKey) setAnswers([...answers, sliderKey]);
+    else setAnswers([...answers, option]);
+    if (answers.length + 1 === questions.length) setShowResult(true);
+  };
+
+  const calculateResult = () => {
+    const tally = { A: 0, B: 0, C: 0, D: 0 };
+    answers.forEach(ans => {
+      if (tally[ans] !== undefined) tally[ans]++;
+    });
+    return Object.entries(tally)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 2);
+  };
+
+  const shareToSocial = () => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent("Check out my Commerce Career Quiz result!");
+    const shareUrl = `https://wa.me/?text=${text}%20${url}`;
+    window.open(shareUrl, '_blank');
+  };
+
+  if (showResult) {
+    const topResults = calculateResult();
+    return (
+      <div className="p-6 max-w-xl mx-auto text-center">
+        <h2 className="text-2xl font-bold mb-4">🎉 Your Top Career Matches</h2>
+        {topResults.map(([key], i) => (
+          <div key={key} className="bg-white shadow-md rounded-xl p-4 mb-4">
+            <h3 className="text-xl font-semibold">#{i + 1}: {results[key].title}</h3>
+            <p className="italic">{results[key].description}</p>
+            <p>🌟 Roles: {results[key].roles.join(", ")}</p>
+            <p>💰 Salary: {results[key].salary}</p>
+            <p>📚 {results[key].citation}</p>
+            <a className="text-blue-500 underline" href={results[key].link} target="_blank" rel="noopener noreferrer">🔗 Learn More</a>
+          </div>
+        ))}
+        <div className="space-y-2">
+          <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => { setAnswers([]); setShowResult(false); }}>🔁 Retake Quiz</button>
+          <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600" onClick={shareToSocial}>📲 Share on WhatsApp</button>
+        </div>
+      </div>
+    );
+  }
+
+  const current = questions[answers.length];
+  return (
+    <div className="p-6 max-w-xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">🌟 Commerce Career Fit Quiz</h1>
+      <p className="mb-4">Question {answers.length + 1} of {questions.length}</p>
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold mb-2">{current.question}</h2>
+        {current.type === 'slider' ? (
+          <div>
+            <input
+              type="range"
+              min="0"
+              max="10"
+              defaultValue="5"
+              className="w-full"
+              onMouseUp={() => handleAnswer(current.key, current.key)}
+            />
+            <div className="text-sm text-gray-500">Drag the slider and release to answer</div>
+          </div>
+        ) : (
+          Object.entries(current.options).map(([key, text]) => (
+            <button
+              key={key}
+              onClick={() => handleAnswer(key)}
+              className="block w-full text-left bg-gray-100 hover:bg-gray-200 rounded p-3 mb-2"
+            >
+              {text}
+            </button>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
