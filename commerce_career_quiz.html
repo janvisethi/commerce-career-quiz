@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Which Commerce Career Suits You Best?</title>
+  <style>
+    body { font-family: Arial; padding: 20px; max-width: 800px; margin: auto; background: #f9f9f9; }
+    h2 { color: #2b2b2b; }
+    .question { margin-bottom: 20px; }
+    .result { margin-top: 30px; padding: 20px; background: #dff0d8; border-left: 5px solid #3c763d; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<h1>Which Commerce Career Suits You Best?</h1>
+<p>Answer the following questions to find out your ideal career path in commerce.</p>
+
+<form id="careerQuiz">
+  <div class="question">
+    <h2>1. Which activity sounds most interesting to you?</h2>
+    <label><input type="radio" name="q1" value="A"> Keeping track of expenses and preparing budgets</label><br>
+    <label><input type="radio" name="q1" value="B"> Talking to people and convincing them of your ideas</label><br>
+    <label><input type="radio" name="q1" value="C"> Understanding how laws and taxes work</label><br>
+    <label><input type="radio" name="q1" value="D"> Finding new ways to earn money or start something of your own</label>
+  </div>
+
+  <div class="question">
+    <h2>2. If you had a school project, which part would you enjoy the most?</h2>
+    <label><input type="radio" name="q2" value="A"> Making charts and calculating figures</label><br>
+    <label><input type="radio" name="q2" value="B"> Presenting ideas to the class</label><br>
+    <label><input type="radio" name="q2" value="C"> Researching rules and regulations</label><br>
+    <label><input type="radio" name="q2" value="D"> Coming up with a brand name and logo</label>
+  </div>
+
+  <div class="question">
+    <h2>3. Which subject do you enjoy the most?</h2>
+    <label><input type="radio" name="q3" value="A"> Accountancy</label><br>
+    <label><input type="radio" name="q3" value="B"> Business Studies</label><br>
+    <label><input type="radio" name="q3" value="C"> Economics</label><br>
+    <label><input type="radio" name="q3" value="D"> A mix, especially thinking outside the box</label>
+  </div>
+
+  <div class="question">
+    <h2>4. What do your friends say you’re good at?</h2>
+    <label><input type="radio" name="q4" value="A"> Being organized and detail-oriented</label><br>
+    <label><input type="radio" name="q4" value="B"> Speaking confidently and leading a team</label><br>
+    <label><input type="radio" name="q4" value="C"> Giving logical advice or solving tough problems</label><br>
+    <label><input type="radio" name="q4" value="D"> Thinking creatively or coming up with new ideas</label>
+  </div>
+
+  <div class="question">
+    <h2>5. How do you solve a problem?</h2>
+    <label><input type="radio" name="q5" value="A"> Step-by-step using logic</label><br>
+    <label><input type="radio" name="q5" value="B"> By discussing it with others</label><br>
+    <label><input type="radio" name="q5" value="C"> By checking what the rules say</label><br>
+    <label><input type="radio" name="q5" value="D"> By trying something new and creative</label>
+  </div>
+
+  <div class="question">
+    <h2>6. You are assigned a group project. What role do you prefer?</h2>
+    <label><input type="radio" name="q6" value="A"> Handling the planning, data, or budget</label><br>
+    <label><input type="radio" name="q6" value="B"> Speaking and representing the team</label><br>
+    <label><input type="radio" name="q6" value="C"> Making sure the group follows the rules</label><br>
+    <label><input type="radio" name="q6" value="D"> Leading and bringing new ideas</label>
+  </div>
+
+  <div class="question">
+    <h2>7. Which of these excites you the most?</h2>
+    <label><input type="radio" name="q7" value="A"> Working in accounts or finance</label><br>
+    <label><input type="radio" name="q7" value="B"> Marketing or managing a team</label><br>
+    <label><input type="radio" name="q7" value="C"> Giving financial or legal advice</label><br>
+    <label><input type="radio" name="q7" value="D"> Running your own business</label>
+  </div>
+
+  <div class="question">
+    <h2>8. Which place would you like to work?</h2>
+    <label><input type="radio" name="q8" value="A"> A bank or accounting firm</label><br>
+    <label><input type="radio" name="q8" value="B"> A creative office with lots of people</label><br>
+    <label><input type="radio" name="q8" value="C"> A legal or tax consulting office</label><br>
+    <label><input type="radio" name="q8" value="D"> Your own business or a startup</label>
+  </div>
+
+  <div class="question">
+    <h2>9. What kind of work gives you satisfaction?</h2>
+    <label><input type="radio" name="q9" value="A"> Accuracy and neatness in numbers</label><br>
+    <label><input type="radio" name="q9" value="B"> Appreciation from people</label><br>
+    <label><input type="radio" name="q9" value="C"> Solving complex problems</label><br>
+    <label><input type="radio" name="q9" value="D"> Creating something unique</label>
+  </div>
+
+  <button type="button" onclick="showResult()">Submit</button>
+</form>
+
+<div id="result" class="result" style="display:none;"></div>
+
+<script>
+  function showResult() {
+    const answers = Array.from(document.querySelectorAll('input[type=radio]:checked')).map(input => input.value);
+    if (answers.length < 9) {
+      alert("Please answer all questions before submitting.");
+      return;
+    }
+
+    const count = { A: 0, B: 0, C: 0, D: 0 };
+    answers.forEach(ans => count[ans]++);
+
+    const topAnswer = Object.keys(count).reduce((a, b) => count[a] > count[b] ? a : b);
+    const resultBox = document.getElementById("result");
+    resultBox.style.display = "block";
+
+    let career = "", description = "";
+
+    switch (topAnswer) {
+      case "A":
+        career = "Accountant / Financial Analyst";
+        description = "You enjoy structure, numbers, and analysis. A career in accounting or finance suits you well.";
+        break;
+      case "B":
+        career = "Marketing / HR Executive";
+        description = "You're great with people and communication. A career in marketing or HR is ideal for you.";
+        break;
+      case "C":
+        career = "Tax Consultant / Legal Advisor";
+        description = "You're logical and enjoy solving rule-based problems. Law or taxation might be your path.";
+        break;
+      case "D":
+        career = "Entrepreneur / Business Owner";
+        description = "You're creative and love innovation. You might thrive in entrepreneurship or start-ups.";
+        break;
+    }
+
+    resultBox.innerHTML = `<h2>Your Ideal Commerce Career: ${career}</h2><p>${description}</p>`;
+  }
+</script>
+
+</body>
+</html>
