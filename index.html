@@ -1,246 +1,176 @@
-import React, { useState, useRef } from 'react';
+<!DOCTYPE html>
+<html lang="en">
 
-const questions = [
-  {
-    question: "When working in a group project, you usually:",
-    options: {
-      A: "Handle the planning and make sense of numbers",
-      B: "Design the presentation and think of catchy ideas",
-      C: "Make sure everyone is heard and things are fair",
-      D: "Come up with creative but logical solutions"
-    }
-  },
-  {
-    question: "Which of these sounds most fun to you?",
-    options: {
-      A: "Tracking your spending and saving using a money app",
-      B: "Making Instagram reels or designing posters",
-      C: "Leading a campaign about sustainability in your school",
-      D: "Solving puzzles, patterns, or Sudoku"
-    }
-  },
-  {
-    question: "Imagine your dream job — which sounds most like you?",
-    options: {
-      A: "Helping a company earn more money wisely",
-      B: "Creating cool ads that go viral",
-      C: "Making businesses more eco-friendly and ethical",
-      D: "Analyzing data to make smart decisions"
-    }
-  },
-  {
-    question: "What’s your favorite type of subject?",
-    options: {
-      A: "Business, accounts, or economics",
-      B: "English, art, or media",
-      C: "Sociology, psychology, or environment",
-      D: "Math, computers, or science"
-    }
-  },
-  {
-    question: "If you had ₹1,00,000 to start something, what would you do?",
-    options: {
-      A: "Invest in stocks or start a small finance business",
-      B: "Start a YouTube or online clothing brand",
-      C: "Fund a cause you care about and make it public",
-      D: "Build a tech-based app or online tool"
-    }
-  },
-  {
-    question: "What’s your dream work vibe?",
-    options: {
-      A: "Suited up, in a business meeting",
-      B: "Casual wear, creating content",
-      C: "In nature or working on real-world problems",
-      D: "Laptop + headphones, solving things in peace"
-    }
-  },
-  {
-    question: "Your teachers often say you are:",
-    options: {
-      A: "Smart with numbers",
-      B: "Imaginative and expressive",
-      C: "Honest and kind",
-      D: "Curious and logical"
-    }
-  },
-  {
-    question: "What would you do after seeing a business fail?",
-    options: {
-      A: "Analyze the financial mistakes",
-      B: "Redesign their branding and story",
-      C: "Check if they were harming society",
-      D: "Use data to understand what went wrong"
-    }
-  },
-  {
-    question: "Which headline grabs your attention?",
-    options: {
-      A: "Teen Invests ₹5000, Grows to ₹50,000!",
-      B: "How One Reels Trend Made This Brand Famous",
-      C: "This Start-up Plants Trees for Every Sale",
-      D: "AI Predicts What You’ll Buy Next"
-    }
-  },
-  {
-    question: "What would you love to learn more about?",
-    options: {
-      A: "How businesses earn, grow, and manage money",
-      B: "How to build a personal brand or run campaigns",
-      C: "How companies can care for people & the planet",
-      D: "How AI, numbers, and tech power smart business"
-    }
-  },
-  {
-    question: "True or False: I enjoy calculating profits and taxes.",
-    options: {
-      A: "True",
-      B: "False"
-    }
-  },
-  {
-    question: "Slider: Rate your interest in designing (0 = not at all, 10 = love it)",
-    type: "slider",
-    key: "B"
-  },
-  {
-    question: "True or False: Ethics are more important than profits.",
-    options: {
-      C: "True",
-      A: "False"
-    }
-  },
-  {
-    question: "Slider: How much do you enjoy working with data (0 = not at all, 10 = love it)?",
-    type: "slider",
-    key: "D"
-  },
-  {
-    question: "True or False: I like following trends and making viral content.",
-    options: {
-      B: "True",
-      C: "False"
-    }
-  }
-];
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commerce Career Quiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-const results = {
-  A: {
-    title: "Finance Wizard 🧮",
-    description: "You’re the kind of person who understands money talks and balance sheets like poetry. You’d thrive in the world of finance, where logic meets leadership!",
-    roles: ["Financial Analyst", "Investment Banker", "Chartered Accountant", "FinTech Consultant"],
-    salary: "₹4–12 LPA (Average)",
-    citation: "Source: National Stock Exchange of India",
-    link: "https://www.nseindia.com/"
-  },
-  B: {
-    title: "Creative Marketer 🎨",
-    description: "You’ve got the vibe, the voice, and the vision! You shine in storytelling, trends, and turning brands into blockbusters.",
-    roles: ["Digital Marketer", "Brand Strategist", "Content Creator"],
-    salary: "₹3–8 LPA (Average)",
-    citation: "Source: UpGrad India",
-    link: "https://www.upgrad.com/blog/digital-marketing-salary-in-india"
-  },
-  C: {
-    title: "Ethical Leader 🌱",
-    description: "You care deeply about impact and ethics. You’re born to lead purpose-driven organizations and shape sustainable business futures.",
-    roles: ["ESG Analyst", "CSR Officer", "Sustainability Consultant"],
-    salary: "₹5–10 LPA (Average)",
-    citation: "Source: Zell Education India",
-    link: "https://www.zelleducation.com/blog/what-salaries-and-job-roles-can-i-expect-in-esg"
-  },
-  D: {
-    title: "Data-Driven Thinker 🧠",
-    description: "You love solving puzzles and uncovering truths through tech and numbers. The future of commerce needs minds like yours!",
-    roles: ["Business Analyst", "Data Analyst", "Tech-Savvy Accountant"],
-    salary: "₹6–14 LPA (Average)",
-    citation: "Source: Indeed India",
-    link: "https://in.indeed.com/career/business-analyst/salaries"
-  }
-};
-
-export default function CommerceCareerQuiz() {
-  const [answers, setAnswers] = useState([]);
-  const [showResult, setShowResult] = useState(false);
-  const quizRef = useRef(null);
-
-  const handleAnswer = (option, sliderKey = null) => {
-    if (sliderKey) setAnswers([...answers, sliderKey]);
-    else setAnswers([...answers, option]);
-    if (answers.length + 1 === questions.length) setShowResult(true);
-  };
-
-  const calculateResult = () => {
-    const tally = { A: 0, B: 0, C: 0, D: 0 };
-    answers.forEach(ans => {
-      if (tally[ans] !== undefined) tally[ans]++;
-    });
-    return Object.entries(tally)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 2);
-  };
-
-  const shareToSocial = () => {
-    const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent("Check out my Commerce Career Quiz result!");
-    const shareUrl = `https://wa.me/?text=${text}%20${url}`;
-    window.open(shareUrl, '_blank');
-  };
-
-  if (showResult) {
-    const topResults = calculateResult();
-    return (
-      <div className="p-6 max-w-xl mx-auto text-center">
-        <h2 className="text-2xl font-bold mb-4">🎉 Your Top Career Matches</h2>
-        {topResults.map(([key], i) => (
-          <div key={key} className="bg-white shadow-md rounded-xl p-4 mb-4">
-            <h3 className="text-xl font-semibold">#{i + 1}: {results[key].title}</h3>
-            <p className="italic mb-1">{results[key].description}</p>
-            <p className="mb-1">🌟 Roles: {results[key].roles.join(", ")}</p>
-            <p className="mb-1">💰 Salary: {results[key].salary}</p>
-            <p className="mb-1">📚 {results[key].citation}</p>
-            <a className="text-blue-500 underline" href={results[key].link} target="_blank" rel="noopener noreferrer">🔗 Learn More</a>
-          </div>
-        ))}
-        <div className="space-y-2">
-          <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => { setAnswers([]); setShowResult(false); }}>🔁 Retake Quiz</button>
-          <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600" onClick={shareToSocial}>📲 Share on WhatsApp</button>
-        </div>
-      </div>
-    );
-  }
-
-  const current = questions[answers.length];
-  return (
-    <div className="p-6 max-w-xl mx-auto" ref={quizRef}>
-      <h1 className="text-2xl font-bold mb-4">🌟 Commerce Career Fit Quiz</h1>
-      <p className="mb-4">Question {answers.length + 1} of {questions.length}</p>
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">{current.question}</h2>
-        {current.type === 'slider' ? (
-          <div>
-            <input
-              type="range"
-              min="0"
-              max="10"
-              defaultValue="5"
-              className="w-full"
-              onMouseUp={() => handleAnswer(current.key, current.key)}
-            />
-            <div className="text-sm text-gray-500">Drag the slider and release to answer</div>
-          </div>
-        ) : (
-          Object.entries(current.options).map(([key, text]) => (
-            <button
-              key={key}
-              onClick={() => handleAnswer(key)}
-              className="block w-full text-left bg-gray-100 hover:bg-gray-200 rounded p-3 mb-2"
-            >
-              {text}
-            </button>
-          ))
-        )}
-      </div>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="w-full max-w-xl bg-white p-6 rounded-2xl shadow-xl relative">
+    <div class="w-full h-2 bg-gray-300 rounded-full overflow-hidden mb-4">
+      <div id="progressBar" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
     </div>
-  );
-}
+    <div id="counter" class="absolute top-4 right-6 text-sm text-gray-600"></div>
+
+    <button id="startBtn" class="w-full py-3 bg-blue-600 text-white text-lg rounded-xl hover:bg-blue-700 transition">Start Quiz</button>
+
+    <div id="quiz" class="hidden">
+      <div id="question" class="text-xl font-semibold mb-6"></div>
+      <div id="options" class="space-y-4"></div>
+    </div>
+
+    <div id="result" class="mt-6 text-gray-800"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      { q: "Which task excites you most in a business setup?", type: "choice", options: ["Crunching numbers", "Designing marketing campaigns", "Leading a team", "Understanding legal documents"], field: "multi" },
+      { q: "Rate your interest in analyzing financial data (0–10)", type: "slider", field: "finance" },
+      { q: "Do you enjoy thinking of catchy slogans or ad ideas?", type: "boolean", field: "marketing" },
+      { q: "How confident are you in resolving conflicts between team members? (0–10)", type: "slider", field: "hr" },
+      { q: "Which would you choose for a college competition?", type: "choice", options: ["Debate on legal policies", "Business plan presentation", "Digital branding challenge", "Finance case study"], field: "multi" },
+      { q: "True or False: I like staying updated with business laws.", type: "boolean", field: "law" },
+      { q: "Rate your leadership and decision-making skills (0–10)", type: "slider", field: "hr" },
+      { q: "Would you like to work in a high-paced stock trading environment?", type: "boolean", field: "finance" },
+      { q: "How often do you use tools like Canva, Excel, or social media analytics? (0–10)", type: "slider", field: "marketing" },
+      { q: "I would love to guide a startup through compliance and regulation.", type: "boolean", field: "law" },
+
+      // Motivational skill set questions
+      { q: "Do you enjoy solving real-world problems with logic and analysis?", type: "boolean", field: "finance" },
+      { q: "Would you rather present your ideas visually or through speech?", type: "choice", options: ["Visually (Posters, Designs)", "Speech (Public Speaking)", "Both", "Neither"], field: "marketing" },
+      { q: "How do you handle team projects?", type: "choice", options: ["I love leading them", "I ensure everyone’s involved", "I prefer individual tasks", "I organize and track progress"], field: "hr" },
+      { q: "Are you someone who likes reading about current policies, rules or laws?", type: "boolean", field: "law" }
+    ];
+
+    const scores = { finance: 0, marketing: 0, hr: 0, law: 0, general: 0 };
+    let current = 0;
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const resultEl = document.getElementById("result");
+    const startBtn = document.getElementById("startBtn");
+    const quizContainer = document.getElementById("quiz");
+    const progressBar = document.getElementById("progressBar");
+    const counter = document.getElementById("counter");
+
+    startBtn.onclick = () => {
+      startBtn.style.display = "none";
+      quizContainer.style.display = "block";
+      loadQuestion();
+    };
+
+    function loadQuestion() {
+      const item = quizData[current];
+      questionEl.textContent = `Q${current + 1}. ${item.q}`;
+      optionsEl.innerHTML = "";
+      progressBar.style.width = `${(current / quizData.length) * 100}%`;
+      counter.textContent = `${current + 1} / ${quizData.length}`;
+
+      if (item.type === "boolean") {
+        ["Yes", "No"].forEach(val => {
+          const btn = document.createElement("button");
+          btn.textContent = val;
+          btn.className = "w-full py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition";
+          btn.onclick = () => next(val === "Yes" ? 1 : 0);
+          optionsEl.appendChild(btn);
+        });
+      } else if (item.type === "choice") {
+        item.options.forEach((opt, idx) => {
+          const btn = document.createElement("button");
+          btn.textContent = opt;
+          btn.className = "w-full py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition";
+          btn.onclick = () => next(idx);
+          optionsEl.appendChild(btn);
+        });
+      } else if (item.type === "slider") {
+        let sliderVal = 5;
+        const slider = document.createElement("input");
+        slider.type = "range";
+        slider.min = 0;
+        slider.max = 10;
+        slider.value = 5;
+        slider.className = "w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer";
+        slider.oninput = (e) => sliderVal = e.target.value;
+        optionsEl.appendChild(slider);
+
+        const btn = document.createElement("button");
+        btn.textContent = "Next";
+        btn.className = "mt-4 w-full py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition";
+        btn.onclick = () => next(parseInt(sliderVal));
+        optionsEl.appendChild(btn);
+      }
+    }
+
+    function next(value) {
+      const field = quizData[current].field;
+
+      if (field === "multi") {
+        if (value === 0) scores.law++;
+        else if (value === 1) scores.general++;
+        else if (value === 2) scores.marketing++;
+        else if (value === 3) scores.finance++;
+      } else {
+        scores[field] += value;
+      }
+
+      current++;
+      if (current < quizData.length) loadQuestion();
+      else showResult();
+    }
+
+    function showResult() {
+      const topFields = Object.entries(scores)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([field]) => field);
+
+      const packages = {
+        finance: "₹6–12 LPA (Source: Naukri, 2024)",
+        marketing: "₹5–10 LPA (Source: AmbitionBox, 2024)",
+        hr: "₹4–8 LPA (Source: Glassdoor, 2024)",
+        law: "₹5–9 LPA (Source: Indeed, 2024)",
+        general: "₹4–10 LPA depending on specialization"
+      };
+
+      const careers = {
+        finance: "Chartered Accountant, Investment Banker, Financial Analyst",
+        marketing: "Brand Manager, Digital Marketer, Market Researcher",
+        hr: "HR Manager, Talent Acquisition, Organizational Consultant",
+        law: "Corporate Lawyer, Compliance Officer, Legal Advisor",
+        general: "Entrepreneur, Management Consultant, Business Analyst"
+      };
+
+      const avatars = {
+        finance: "📊",
+        marketing: "🎨",
+        hr: "🤝",
+        law: "⚖️",
+        general: "💼"
+      };
+
+      resultEl.innerHTML = `
+        <div class="text-left space-y-4">
+          <h2 class="text-2xl font-bold">🎯 Your Top 3 Suggested Commerce Career Paths:</h2>
+          <ol class="list-decimal list-inside space-y-2">
+            ${topFields.map(field => `
+              <li><strong class="text-blue-600">${avatars[field]} ${field.toUpperCase()}</strong><br>
+                🚀 Careers: ${careers[field]}<br>
+                💰 Avg Salary: ${packages[field]}</li>
+            `).join('')}
+          </ol>
+          <p class="text-sm text-gray-600">✨ Ready to explore these career paths? Consider internships, online courses, or mentorship in these areas!</p>
+          <button onclick="location.reload()" class="mt-4 w-full py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition">🔁 Restart Quiz</button>
+        </div>
+      `;
+
+      document.getElementById("quiz").style.display = "none";
+      progressBar.style.width = '100%';
+      counter.textContent = `${quizData.length} / ${quizData.length}`;
+    }
+  </script>
+</body>
+
+</html>
