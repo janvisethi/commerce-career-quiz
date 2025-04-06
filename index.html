@@ -162,6 +162,7 @@ const results = {
 export default function CommerceCareerQuiz() {
   const [answers, setAnswers] = useState([]);
   const [showResult, setShowResult] = useState(false);
+  const quizRef = useRef(null);
 
   const handleAnswer = (option, sliderKey = null) => {
     if (sliderKey) setAnswers([...answers, sliderKey]);
@@ -194,10 +195,10 @@ export default function CommerceCareerQuiz() {
         {topResults.map(([key], i) => (
           <div key={key} className="bg-white shadow-md rounded-xl p-4 mb-4">
             <h3 className="text-xl font-semibold">#{i + 1}: {results[key].title}</h3>
-            <p className="italic">{results[key].description}</p>
-            <p>🌟 Roles: {results[key].roles.join(", ")}</p>
-            <p>💰 Salary: {results[key].salary}</p>
-            <p>📚 {results[key].citation}</p>
+            <p className="italic mb-1">{results[key].description}</p>
+            <p className="mb-1">🌟 Roles: {results[key].roles.join(", ")}</p>
+            <p className="mb-1">💰 Salary: {results[key].salary}</p>
+            <p className="mb-1">📚 {results[key].citation}</p>
             <a className="text-blue-500 underline" href={results[key].link} target="_blank" rel="noopener noreferrer">🔗 Learn More</a>
           </div>
         ))}
@@ -211,7 +212,7 @@ export default function CommerceCareerQuiz() {
 
   const current = questions[answers.length];
   return (
-    <div className="p-6 max-w-xl mx-auto">
+    <div className="p-6 max-w-xl mx-auto" ref={quizRef}>
       <h1 className="text-2xl font-bold mb-4">🌟 Commerce Career Fit Quiz</h1>
       <p className="mb-4">Question {answers.length + 1} of {questions.length}</p>
       <div className="mb-4">
