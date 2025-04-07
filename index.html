@@ -13,6 +13,10 @@
     <div class="bg-white rounded-2xl shadow-xl p-6 relative mb-6">
       <div id="progressBar" class="h-2 bg-blue-500 transition-all duration-300 rounded-full" style="width: 0%"></div>
       <div id="counter" class="absolute top-4 right-6 text-sm text-gray-600"></div>
+      <div class="text-center mb-4">
+        <h1 class="text-xl font-bold text-blue-700">🌟 Discover Your Commerce Superpower!</h1>
+        <p class="text-sm text-gray-600">Take this fun quiz to find out where your natural strengths align in the vast world of commerce — from finance to fintech!</p>
+      </div>
       <button id="startBtn" class="w-full py-3 bg-blue-600 text-white text-lg rounded-xl hover:bg-blue-700 transition">Start Quiz</button>
       <form id="quiz" class="hidden space-y-10"></form>
     </div>
@@ -22,19 +26,19 @@
 
   <script>
     const quizData = [
-      { q: "What’s your go-to role in a group project?", type: "choice", options: ["Planning and setting goals (Finance)", "Designing the presentation or posters (Marketing)", "Assigning tasks and resolving disputes (HR)", "Researching rules and regulations (Law)"], field: "multi" },
-      { q: "Which of these sounds most interesting to you?", type: "choice", options: ["Tracking market trends and investments", "Running a social media campaign", "Building a strong team and culture", "Reviewing contracts and business laws"], field: "multi" },
-      { q: "You are asked to lead a club in college. What would be your first step?", type: "choice", options: ["Set a clear budget and financial goals", "Brand it with a cool name and logo", "Assign roles and build a team", "Ensure all rules and policies are followed"], field: "multi" },
-      { q: "Which school activity do you enjoy the most?", type: "choice", options: ["Math Olympiads or finance quizzes", "Poster-making or advertisement creation", "Organizing events or managing volunteers", "Debating on laws or writing essays on rights"], field: "multi" },
-      { q: "If given a budget of ₹10,000 for a college fest, what would you do?", type: "choice", options: ["Plan expenses and track ROI", "Design posters and promote online", "Hire volunteers and create schedules", "Get permissions and legal approvals"], field: "multi" },
-      { q: "What kind of news excites you the most?", type: "choice", options: ["Stock market and budget updates", "Marketing trends and brand campaigns", "Job hiring trends and HR policies", "Supreme Court decisions or new laws"], field: "multi" },
-      { q: "Which app do you use the most (or enjoy)?", type: "choice", options: ["Zerodha or Moneycontrol", "Instagram or Canva", "Notion or Trello", "LiveLaw or Bar & Bench"], field: "multi" },
-      { q: "What motivates you the most in a career?", type: "choice", options: ["Financial growth and wealth creation", "Creativity and public influence", "Team success and building people", "Justice and doing the right thing"], field: "multi" },
-      { q: "You have 2 hours free at college. What would you prefer to do?", type: "choice", options: ["Watch finance YouTube channels", "Edit reels or design social content", "Volunteer in student council work", "Read up on constitutional rights"], field: "multi" },
-      { q: "Which course would you prefer to take next semester?", type: "choice", options: ["Investment & Portfolio Management", "Digital Marketing", "Organizational Behavior", "Business & Corporate Law"], field: "multi" },
+      { q: "What part of learning excites you most?", type: "choice", options: ["Solving real-world money problems", "Using technology to simplify tasks"], field: "multi" },
+      { q: "Which activity would you enjoy more?", type: "choice", options: ["Balancing a budget or accounts", "Analyzing app usage data or payment trends"], field: "multi" },
+      { q: "What kind of content do you consume more?", type: "choice", options: ["How to save or invest smartly", "How new technologies change the world"], field: "multi" },
+      { q: "You’re part of a college fest. What’s your ideal role?", type: "choice", options: ["Handling budget and reimbursement", "Managing online registration systems or analytics"], field: "multi" },
+      { q: "Which of these excites you more as a future path?", type: "choice", options: ["Audit or tax consultancy", "Fintech product development or data insight"], field: "multi" },
+      { q: "You enjoy when…", type: "choice", options: ["The numbers tally perfectly in a project", "You automate a task with tech or shortcut"], field: "multi" },
+      { q: "What motivates you more?", type: "choice", options: ["Stability and detail-oriented work", "Fast-paced innovation and change"], field: "multi" },
+      { q: "Which tool would you love to master?", type: "choice", options: ["Tally or taxation software", "Power BI or Tableau"], field: "multi" },
+      { q: "Which sounds like a dream career to you?", type: "choice", options: ["Becoming a government auditor or enrolled agent", "Creating a financial app that millions use"], field: "multi" },
+      { q: "You are helping a friend. What’s your approach?", type: "choice", options: ["Teach how to calculate tax refund", "Show how to use a budgeting app"], field: "multi" },
     ];
 
-    const scores = { finance: 0, marketing: 0, hr: 0, law: 0, general: 0 };
+    const scores = { accounting: 0, fintech: 0 };
 
     const form = document.getElementById("quiz");
     const resultEl = document.getElementById("result");
@@ -112,10 +116,8 @@
         const field = item.field;
 
         if (field === "multi") {
-          if (value === 0) scores.finance++;
-          else if (value === 1) scores.marketing++;
-          else if (value === 2) scores.hr++;
-          else if (value === 3) scores.law++;
+          if (value === 0) scores.accounting++;
+          else if (value === 1) scores.fintech++;
         }
       });
 
@@ -127,47 +129,52 @@
       progressBar.style.width = '100%';
       counter.textContent = `${quizData.length} / ${quizData.length}`;
 
-      const topFields = Object.entries(scores)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 3)
-        .map(([field]) => field);
-
       const packages = {
-        finance: "₹6–12 LPA (Source: Naukri, 2024)",
-        marketing: "₹5–10 LPA (Source: AmbitionBox, 2024)",
-        hr: "₹4–8 LPA (Source: Glassdoor, 2024)",
-        law: "₹5–9 LPA (Source: Indeed, 2024)",
-        general: "₹4–10 LPA depending on specialization"
+        accounting: "₹5–10 LPA (ICAI, 2024)",
+        fintech: "₹6–14 LPA (Naukri, 2024)"
       };
 
       const careers = {
-        finance: "Chartered Accountant, Investment Banker, Financial Analyst",
-        marketing: "Brand Manager, Digital Marketer, Market Researcher",
-        hr: "HR Manager, Talent Acquisition, Organizational Consultant",
-        law: "Corporate Lawyer, Compliance Officer, Legal Advisor",
-        general: "Entrepreneur, Management Consultant, Business Analyst"
+        accounting: "Auditor, Chartered Accountant, Enrolled Agent",
+        fintech: "Fintech Analyst, Data Analyst, UPI Product Strategist"
       };
 
-      const avatars = {
-        finance: "📊",
-        marketing: "🎨",
-        hr: "🤝",
-        law: "⚖️",
-        general: "💼"
+      const emojis = {
+        accounting: "🧾",
+        fintech: "📱"
       };
+
+      const adjectives = {
+        accounting: "detail-oriented, reliable, and principled",
+        fintech: "curious, innovative, and tech-savvy"
+      };
+
+      const diff = Math.abs(scores.accounting - scores.fintech);
+      let topFields;
+      let summaryText = "";
+
+      if (diff <= 2) {
+        topFields = ["accounting", "fintech"];
+        summaryText = "You seem to enjoy both structure and innovation — traits that make you versatile and adaptable. Explore internships in both fields and decide what suits your style best.";
+      } else {
+        topFields = scores.accounting > scores.fintech ? ["accounting"] : ["fintech"];
+        const chosen = topFields[0];
+        summaryText = `Your results show you're <strong class="text-blue-600">${adjectives[chosen]}</strong>, making you naturally fit for <strong class="text-blue-600">${chosen.toUpperCase()}</strong>. Dive deeper into this field and explore online courses, certifications, or mentorships.`;
+      }
 
       resultEl.innerHTML = `
         <div class="bg-white p-6 rounded-xl shadow-xl space-y-4">
-          <h2 class="text-2xl font-bold">🎯 Your Top 3 Suggested Commerce Career Paths:</h2>
+          <h2 class="text-2xl font-bold">🚀 You're Commerce-Ready!</h2>
           <ol class="list-decimal list-inside space-y-2">
             ${topFields.map(field => `
-              <li><strong class="text-blue-600">${avatars[field]} ${field.toUpperCase()}</strong><br>
-                🚀 Careers: ${careers[field]}<br>
-                💰 Avg Salary: ${packages[field]}</li>
+              <li><strong class="text-blue-600">${emojis[field]} ${field.toUpperCase()}</strong><br>
+                🧠 Skills: ${adjectives[field]}<br>
+                🔍 Top Careers: ${careers[field]}<br>
+                💰 Average Package: ${packages[field]}</li>
             `).join('')}
           </ol>
-          <p class="text-sm text-gray-600">✨ Ready to explore these career paths? Consider internships, online courses, or mentorship in these areas!</p>
-          <button onclick="location.reload()" class="w-full py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">🔁 Restart Quiz</button>
+          <p class="text-sm text-gray-700">${summaryText}</p>
+          <button onclick="location.reload()" class="w-full py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">🔁 Take Again</button>
         </div>
       `;
     }
