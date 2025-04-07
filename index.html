@@ -8,21 +8,16 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-  <div class="w-full max-w-xl bg-white p-6 rounded-2xl shadow-xl relative">
-    <div class="w-full h-2 bg-gray-300 rounded-full overflow-hidden mb-4">
-      <div id="progressBar" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
-    </div>
-    <div id="counter" class="absolute top-4 right-6 text-sm text-gray-600"></div>
-
-    <button id="startBtn" class="w-full py-3 bg-blue-600 text-white text-lg rounded-xl hover:bg-blue-700 transition">Start Quiz</button>
-
-    <div id="quiz" class="hidden">
-      <div id="question" class="text-xl font-semibold mb-6"></div>
-      <div id="options" class="space-y-4"></div>
+<body class="bg-gray-100 min-h-screen">
+  <div class="max-w-xl mx-auto p-6">
+    <div class="bg-white rounded-2xl shadow-xl p-6 relative mb-6">
+      <div id="progressBar" class="h-2 bg-blue-500 transition-all duration-300 rounded-full" style="width: 0%"></div>
+      <div id="counter" class="absolute top-4 right-6 text-sm text-gray-600"></div>
+      <button id="startBtn" class="w-full py-3 bg-blue-600 text-white text-lg rounded-xl hover:bg-blue-700 transition">Start Quiz</button>
+      <form id="quiz" class="hidden space-y-10"></form>
     </div>
 
-    <div id="result" class="mt-6 text-gray-800"></div>
+    <div id="result" class="text-gray-800"></div>
   </div>
 
   <script>
@@ -36,92 +31,96 @@
       { q: "Rate your leadership and decision-making skills (0–10)", type: "slider", field: "hr" },
       { q: "Would you like to work in a high-paced stock trading environment?", type: "boolean", field: "finance" },
       { q: "How often do you use tools like Canva, Excel, or social media analytics? (0–10)", type: "slider", field: "marketing" },
-      { q: "I would love to guide a startup through compliance and regulation.", type: "boolean", field: "law" },
-
-      // Motivational skill set questions
-      { q: "Do you enjoy solving real-world problems with logic and analysis?", type: "boolean", field: "finance" },
-      { q: "Would you rather present your ideas visually or through speech?", type: "choice", options: ["Visually (Posters, Designs)", "Speech (Public Speaking)", "Both", "Neither"], field: "marketing" },
-      { q: "How do you handle team projects?", type: "choice", options: ["I love leading them", "I ensure everyone’s involved", "I prefer individual tasks", "I organize and track progress"], field: "hr" },
-      { q: "Are you someone who likes reading about current policies, rules or laws?", type: "boolean", field: "law" }
+      { q: "Are you someone who likes reading about current policies, rules or laws?", type: "boolean", field: "law" },
     ];
 
     const scores = { finance: 0, marketing: 0, hr: 0, law: 0, general: 0 };
-    let current = 0;
 
-    const questionEl = document.getElementById("question");
-    const optionsEl = document.getElementById("options");
+    const form = document.getElementById("quiz");
     const resultEl = document.getElementById("result");
-    const startBtn = document.getElementById("startBtn");
-    const quizContainer = document.getElementById("quiz");
     const progressBar = document.getElementById("progressBar");
     const counter = document.getElementById("counter");
+    const startBtn = document.getElementById("startBtn");
 
     startBtn.onclick = () => {
       startBtn.style.display = "none";
-      quizContainer.style.display = "block";
-      loadQuestion();
+      form.style.display = "block";
+      loadQuestions();
     };
 
-    function loadQuestion() {
-      const item = quizData[current];
-      questionEl.textContent = `Q${current + 1}. ${item.q}`;
-      optionsEl.innerHTML = "";
-      progressBar.style.width = `${(current / quizData.length) * 100}%`;
-      counter.textContent = `${current + 1} / ${quizData.length}`;
+    function loadQuestions() {
+      quizData.forEach((item, index) => {
+        const qWrapper = document.createElement("div");
+        qWrapper.className = "bg-gray-50 p-4 rounded-xl shadow";
 
-      if (item.type === "boolean") {
-        ["Yes", "No"].forEach(val => {
-          const btn = document.createElement("button");
-          btn.textContent = val;
-          btn.className = "w-full py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition";
-          btn.onclick = () => next(val === "Yes" ? 1 : 0);
-          optionsEl.appendChild(btn);
-        });
-      } else if (item.type === "choice") {
-        item.options.forEach((opt, idx) => {
-          const btn = document.createElement("button");
-          btn.textContent = opt;
-          btn.className = "w-full py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition";
-          btn.onclick = () => next(idx);
-          optionsEl.appendChild(btn);
-        });
-      } else if (item.type === "slider") {
-        let sliderVal = 5;
-        const slider = document.createElement("input");
-        slider.type = "range";
-        slider.min = 0;
-        slider.max = 10;
-        slider.value = 5;
-        slider.className = "w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer";
-        slider.oninput = (e) => sliderVal = e.target.value;
-        optionsEl.appendChild(slider);
+        const qTitle = document.createElement("h3");
+        qTitle.className = "text-lg font-semibold mb-3";
+        qTitle.textContent = `Q${index + 1}. ${item.q}`;
+        qWrapper.appendChild(qTitle);
 
-        const btn = document.createElement("button");
-        btn.textContent = "Next";
-        btn.className = "mt-4 w-full py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition";
-        btn.onclick = () => next(parseInt(sliderVal));
-        optionsEl.appendChild(btn);
-      }
+        if (item.type === "boolean") {
+          ["Yes", "No"].forEach(val => {
+            const label = document.createElement("label");
+            label.className = "block mb-2";
+            label.innerHTML = `<input type="radio" name="q${index}" value="${val === "Yes" ? 1 : 0}" class="mr-2"> ${val}`;
+            qWrapper.appendChild(label);
+          });
+        } else if (item.type === "choice") {
+          item.options.forEach((opt, idx) => {
+            const label = document.createElement("label");
+            label.className = "block mb-2";
+            label.innerHTML = `<input type="radio" name="q${index}" value="${idx}" class="mr-2"> ${opt}`;
+            qWrapper.appendChild(label);
+          });
+        } else if (item.type === "slider") {
+          const input = document.createElement("input");
+          input.type = "range";
+          input.min = 0;
+          input.max = 10;
+          input.value = 5;
+          input.name = `q${index}`;
+          input.className = "w-full mb-2";
+          qWrapper.appendChild(input);
+        }
+
+        form.appendChild(qWrapper);
+      });
+
+      const submitBtn = document.createElement("button");
+      submitBtn.textContent = "Submit";
+      submitBtn.className = "w-full py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition mt-6";
+      submitBtn.onclick = (e) => {
+        e.preventDefault();
+        evaluateQuiz();
+      };
+      form.appendChild(submitBtn);
     }
 
-    function next(value) {
-      const field = quizData[current].field;
+    function evaluateQuiz() {
+      const inputs = form.elements;
+      quizData.forEach((item, index) => {
+        const val = inputs[`q${index}`].value;
+        const value = parseInt(val);
+        const field = item.field;
 
-      if (field === "multi") {
-        if (value === 0) scores.law++;
-        else if (value === 1) scores.general++;
-        else if (value === 2) scores.marketing++;
-        else if (value === 3) scores.finance++;
-      } else {
-        scores[field] += value;
-      }
+        if (field === "multi") {
+          if (value === 0) scores.law++;
+          else if (value === 1) scores.general++;
+          else if (value === 2) scores.marketing++;
+          else if (value === 3) scores.finance++;
+        } else {
+          scores[field] += value;
+        }
+      });
 
-      current++;
-      if (current < quizData.length) loadQuestion();
-      else showResult();
+      showResult();
     }
 
     function showResult() {
+      form.style.display = "none";
+      progressBar.style.width = '100%';
+      counter.textContent = `${quizData.length} / ${quizData.length}`;
+
       const topFields = Object.entries(scores)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 3)
@@ -152,7 +151,7 @@
       };
 
       resultEl.innerHTML = `
-        <div class="text-left space-y-4">
+        <div class="bg-white p-6 rounded-xl shadow-xl space-y-4">
           <h2 class="text-2xl font-bold">🎯 Your Top 3 Suggested Commerce Career Paths:</h2>
           <ol class="list-decimal list-inside space-y-2">
             ${topFields.map(field => `
@@ -162,13 +161,9 @@
             `).join('')}
           </ol>
           <p class="text-sm text-gray-600">✨ Ready to explore these career paths? Consider internships, online courses, or mentorship in these areas!</p>
-          <button onclick="location.reload()" class="mt-4 w-full py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition">🔁 Restart Quiz</button>
+          <button onclick="location.reload()" class="w-full py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">🔁 Restart Quiz</button>
         </div>
       `;
-
-      document.getElementById("quiz").style.display = "none";
-      progressBar.style.width = '100%';
-      counter.textContent = `${quizData.length} / ${quizData.length}`;
     }
   </script>
 </body>
