@@ -15,9 +15,9 @@
       <div id="counter" class="absolute top-4 right-6 text-sm text-gray-600"></div>
       <div class="text-center mb-4">
         <h1 class="text-xl font-bold text-blue-700">🌟 Discover Your Commerce Superpower!</h1>
-        <p class="text-sm text-gray-600">Take this fun quiz to find out where your natural strengths align in the vast world of commerce — from finance to fintech!</p>
+        <p class="text-sm text-gray-600">Take this fun quiz to explore your hidden skills and find your perfect commerce career path — from accounting to analytics!</p>
       </div>
-      <button id="startBtn" class="w-full py-3 bg-blue-600 text-white text-lg rounded-xl hover:bg-blue-700 transition">Start Quiz</button>
+      <button id="startBtn" class="w-full py-3 bg-blue-600 text-white text-lg rounded-xl hover:bg-blue-700 transition">🚀 Start the Quiz & Uncover Your Hidden Talents!</button>
       <form id="quiz" class="hidden space-y-10"></form>
     </div>
 
@@ -26,158 +26,187 @@
 
   <script>
     const quizData = [
-      { q: "What part of learning excites you most?", type: "choice", options: ["Solving real-world money problems", "Using technology to simplify tasks"], field: "multi" },
-      { q: "Which activity would you enjoy more?", type: "choice", options: ["Balancing a budget or accounts", "Analyzing app usage data or payment trends"], field: "multi" },
-      { q: "What kind of content do you consume more?", type: "choice", options: ["How to save or invest smartly", "How new technologies change the world"], field: "multi" },
-      { q: "You’re part of a college fest. What’s your ideal role?", type: "choice", options: ["Handling budget and reimbursement", "Managing online registration systems or analytics"], field: "multi" },
-      { q: "Which of these excites you more as a future path?", type: "choice", options: ["Audit or tax consultancy", "Fintech product development or data insight"], field: "multi" },
-      { q: "You enjoy when…", type: "choice", options: ["The numbers tally perfectly in a project", "You automate a task with tech or shortcut"], field: "multi" },
-      { q: "What motivates you more?", type: "choice", options: ["Stability and detail-oriented work", "Fast-paced innovation and change"], field: "multi" },
-      { q: "Which tool would you love to master?", type: "choice", options: ["Tally or taxation software", "Power BI or Tableau"], field: "multi" },
-      { q: "Which sounds like a dream career to you?", type: "choice", options: ["Becoming a government auditor or enrolled agent", "Creating a financial app that millions use"], field: "multi" },
-      { q: "You are helping a friend. What’s your approach?", type: "choice", options: ["Teach how to calculate tax refund", "Show how to use a budgeting app"], field: "multi" },
+      { q: "You are given a messy budget file. What’s your approach?", type: "choice", options: ["Fix the numbers and balance it", "Analyze trends and future impact", "Use Excel tools and formulas", "Organize team inputs and finalize"], field: ["CA", "ECO", "DATA", "HR"] },
+      { q: "When solving problems, you prefer to:", type: "choice", options: ["Work with structured data", "Evaluate economic impact", "Build with digital tools", "Present business ideas"], field: ["CA", "ECO", "FINTECH", "ENT"] },
+      { q: "Which career excites you most?", type: "choice", options: ["Helping people with tax planning", "Analyzing big data trends", "Creating new tech-driven solutions", "Advising companies"], field: ["TAX", "DATA", "FINTECH", "CONSULT"] },
+      { q: "I enjoy analyzing numbers and ensuring accuracy.", type: "boolean", field: ["CA"] },
+      { q: "I find it exciting to understand economic trends.", type: "boolean", field: ["ECO"] },
+      { q: "I love exploring new digital tools to improve work.", type: "boolean", field: ["FINTECH"] },
+      { q: "I feel energized when I collaborate and lead teams.", type: "boolean", field: ["HR", "MKT"] },
+      { q: "How confident are you in spotting financial errors?", type: "slider", field: ["CA"] },
+      { q: "How comfortable are you working with data and charts?", type: "slider", field: ["DATA", "FINTECH"] },
+      { q: "How interested are you in consulting or solving business problems?", type: "slider", field: ["CONSULT", "ENT"] }
     ];
 
-    const scores = { accounting: 0, fintech: 0 };
-
-    const form = document.getElementById("quiz");
-    const resultEl = document.getElementById("result");
+    const quizForm = document.getElementById("quiz");
+    const resultDiv = document.getElementById("result");
+    const startBtn = document.getElementById("startBtn");
     const progressBar = document.getElementById("progressBar");
     const counter = document.getElementById("counter");
-    const startBtn = document.getElementById("startBtn");
 
-    let currentQuestionIndex = 0;
-
-    startBtn.onclick = () => {
-      startBtn.style.display = "none";
-      form.style.display = "block";
-      loadQuestions();
+    let currentQuestion = 0;
+    let scores = {
+      CA: 0,
+      ECO: 0,
+      FINTECH: 0,
+      HR: 0,
+      MKT: 0,
+      ENT: 0,
+      TAX: 0,
+      DATA: 0,
+      CONSULT: 0
     };
 
-    function loadQuestions() {
-      quizData.forEach((item, index) => {
-        const qWrapper = document.createElement("div");
-        qWrapper.className = "bg-gray-50 p-4 rounded-xl shadow";
-        qWrapper.style.display = index === 0 ? "block" : "none";
+    function renderQuestion(index) {
+      quizForm.innerHTML = "";
+      const q = quizData[index];
+      const wrapper = document.createElement("div");
 
-        const qTitle = document.createElement("h3");
-        qTitle.className = "text-lg font-semibold mb-3";
-        qTitle.textContent = `Q${index + 1}. ${item.q}`;
-        qWrapper.appendChild(qTitle);
+      const label = document.createElement("label");
+      label.className = "block text-lg font-semibold mb-2";
+      label.textContent = q.q;
+      wrapper.appendChild(label);
 
-        if (item.type === "choice") {
-          item.options.forEach((opt, idx) => {
-            const label = document.createElement("label");
-            label.className = "block mb-2";
-            label.innerHTML = `<input type="radio" name="q${index}" value="${idx}" class="mr-2"> ${opt}`;
-            qWrapper.appendChild(label);
-          });
-        }
+      if (q.type === "choice") {
+        q.options.forEach((opt, i) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = opt;
+          btn.className = "block w-full mb-2 p-3 bg-blue-100 rounded-lg hover:bg-blue-200";
+          btn.onclick = () => {
+            q.field.forEach((f, fi) => { if (i === fi) scores[f] += 2; });
+            nextQuestion();
+          };
+          wrapper.appendChild(btn);
+        });
+      } else if (q.type === "boolean") {
+        ["Yes", "No"].forEach(val => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = val;
+          btn.className = "block w-full mb-2 p-3 bg-blue-100 rounded-lg hover:bg-blue-200";
+          btn.onclick = () => {
+            if (val === "Yes") q.field.forEach(f => scores[f] += 2);
+            nextQuestion();
+          };
+          wrapper.appendChild(btn);
+        });
+      } else if (q.type === "slider") {
+        const input = document.createElement("input");
+        input.type = "range";
+        input.min = 0;
+        input.max = 5;
+        input.value = 3;
+        input.className = "w-full";
+        wrapper.appendChild(input);
 
-        const nextBtn = document.createElement("button");
-        nextBtn.textContent = index === quizData.length - 1 ? "Submit" : "Next";
-        nextBtn.className = "mt-4 bg-blue-500 text-white py-2 px-4 rounded";
-        nextBtn.onclick = (e) => {
-          e.preventDefault();
-          const inputs = qWrapper.querySelectorAll("input");
-          let answered = false;
-          inputs.forEach(input => {
-            if (input.checked) answered = true;
-          });
-          if (!answered) {
-            alert("Please answer the question before continuing.");
-            return;
-          }
-
-          form.children[currentQuestionIndex].style.display = "none";
-          currentQuestionIndex++;
-
-          if (currentQuestionIndex < quizData.length) {
-            form.children[currentQuestionIndex].style.display = "block";
-            progressBar.style.width = `${(currentQuestionIndex / quizData.length) * 100}%`;
-            counter.textContent = `${currentQuestionIndex + 1} / ${quizData.length}`;
-          } else {
-            evaluateQuiz();
-          }
+        const submit = document.createElement("button");
+        submit.textContent = "Next";
+        submit.className = "mt-2 w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700";
+        submit.type = "button";
+        submit.onclick = () => {
+          q.field.forEach(f => scores[f] += parseInt(input.value));
+          nextQuestion();
         };
-        qWrapper.appendChild(nextBtn);
-
-        form.appendChild(qWrapper);
-      });
-      progressBar.style.width = `0%`;
-      counter.textContent = `1 / ${quizData.length}`;
-    }
-
-    function evaluateQuiz() {
-      const inputs = form.elements;
-      quizData.forEach((item, index) => {
-        const val = inputs[`q${index}`].value;
-        const value = parseInt(val);
-        const field = item.field;
-
-        if (field === "multi") {
-          if (value === 0) scores.accounting++;
-          else if (value === 1) scores.fintech++;
-        }
-      });
-
-      showResult();
-    }
-
-    function showResult() {
-      form.style.display = "none";
-      progressBar.style.width = '100%';
-      counter.textContent = `${quizData.length} / ${quizData.length}`;
-
-      const packages = {
-        accounting: "₹5–10 LPA (ICAI, 2024)",
-        fintech: "₹6–14 LPA (Naukri, 2024)"
-      };
-
-      const careers = {
-        accounting: "Auditor, Chartered Accountant, Enrolled Agent",
-        fintech: "Fintech Analyst, Data Analyst, UPI Product Strategist"
-      };
-
-      const emojis = {
-        accounting: "🧾",
-        fintech: "📱"
-      };
-
-      const adjectives = {
-        accounting: "detail-oriented, reliable, and principled",
-        fintech: "curious, innovative, and tech-savvy"
-      };
-
-      const diff = Math.abs(scores.accounting - scores.fintech);
-      let topFields;
-      let summaryText = "";
-
-      if (diff <= 2) {
-        topFields = ["accounting", "fintech"];
-        summaryText = "You seem to enjoy both structure and innovation — traits that make you versatile and adaptable. Explore internships in both fields and decide what suits your style best.";
-      } else {
-        topFields = scores.accounting > scores.fintech ? ["accounting"] : ["fintech"];
-        const chosen = topFields[0];
-        summaryText = `Your results show you're <strong class="text-blue-600">${adjectives[chosen]}</strong>, making you naturally fit for <strong class="text-blue-600">${chosen.toUpperCase()}</strong>. Dive deeper into this field and explore online courses, certifications, or mentorships.`;
+        wrapper.appendChild(submit);
       }
 
-      resultEl.innerHTML = `
-        <div class="bg-white p-6 rounded-xl shadow-xl space-y-4">
-          <h2 class="text-2xl font-bold">🚀 You're Commerce-Ready!</h2>
-          <ol class="list-decimal list-inside space-y-2">
-            ${topFields.map(field => `
-              <li><strong class="text-blue-600">${emojis[field]} ${field.toUpperCase()}</strong><br>
-                🧠 Skills: ${adjectives[field]}<br>
-                🔍 Top Careers: ${careers[field]}<br>
-                💰 Average Package: ${packages[field]}</li>
-            `).join('')}
-          </ol>
-          <p class="text-sm text-gray-700">${summaryText}</p>
-          <button onclick="location.reload()" class="w-full py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">🔁 Take Again</button>
-        </div>
-      `;
+      quizForm.appendChild(wrapper);
+      progressBar.style.width = `${((index + 1) / quizData.length) * 100}%`;
+      counter.textContent = `${index + 1} / ${quizData.length}`;
     }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        renderQuestion(currentQuestion);
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      quizForm.classList.add("hidden");
+      resultDiv.innerHTML = "<h2 class='text-xl font-bold mb-4'>🎯 Your Ideal Commerce Career Path:</h2>";
+
+      const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+      const topTwo = sorted.slice(0, 2);
+
+      const careerDetails = {
+        CA: {
+          title: "📊 Chartered Accountant (CA)",
+          desc: "Master of financial reporting, auditing, and compliance.",
+          salary: "₹8–12 LPA",
+          link: "https://www.icai.org/"
+        },
+        ECO: {
+          title: "📈 Economist",
+          desc: "Analyze economic trends, policies, and data.",
+          salary: "₹10–15 LPA",
+          link: "https://www.rbi.org.in/"
+        },
+        FINTECH: {
+          title: "💻 FinTech Analyst",
+          desc: "Solve financial problems with tech and innovation.",
+          salary: "₹6–12 LPA",
+          link: "https://www.ibef.org/industry/fintech-india"
+        },
+        DATA: {
+          title: "📊 Data Analyst",
+          desc: "Use data to drive insights and strategies.",
+          salary: "₹6–10 LPA",
+          link: "https://www.naukri.com/data-analyst-jobs"
+        },
+        TAX: {
+          title: "💼 Tax Consultant",
+          desc: "Guide individuals and firms on taxation.",
+          salary: "₹5–9 LPA",
+          link: "https://www.icai.org/post.html?post_id=14857"
+        },
+        HR: {
+          title: "🤝 HR Specialist",
+          desc: "Build strong teams and manage talent.",
+          salary: "₹5–9 LPA",
+          link: "https://www.shrm.org/"
+        },
+        MKT: {
+          title: "📢 Marketing Pro",
+          desc: "Drive brand strategy and consumer engagement.",
+          salary: "₹6–12 LPA",
+          link: "https://www.iimskills.com/marketing-careers-in-india/"
+        },
+        CONSULT: {
+          title: "🧠 Business Consultant",
+          desc: "Solve complex business challenges.",
+          salary: "₹8–14 LPA",
+          link: "https://www.mckinsey.com/"
+        },
+        ENT: {
+          title: "🚀 Entrepreneur",
+          desc: "Turn ideas into impactful ventures.",
+          salary: "Income varies widely",
+          link: "https://www.startupindia.gov.in/"
+        }
+      };
+
+      topTwo.forEach(([key, _]) => {
+        const career = careerDetails[key];
+        resultDiv.innerHTML += `
+          <div class='bg-green-100 p-5 rounded-xl shadow-xl mb-4'>
+            <h3 class='text-2xl font-bold mb-2'>${career.title}</h3>
+            <p class='text-base mb-2'>${career.desc}</p>
+            <p class='text-sm text-gray-700 mb-2'><strong>Avg Package:</strong> ${career.salary}</p>
+            <a href='${career.link}' target='_blank' class='text-blue-600 underline'>Learn more</a>
+          </div>
+        `;
+      });
+    }
+
+    startBtn.addEventListener("click", () => {
+      startBtn.classList.add("hidden");
+      quizForm.classList.remove("hidden");
+      renderQuestion(currentQuestion);
+    });
   </script>
 </body>
 
