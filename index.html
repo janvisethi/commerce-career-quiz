@@ -22,16 +22,16 @@
 
   <script>
     const quizData = [
-      { q: "Which task excites you most in a business setup?", type: "choice", options: ["Crunching numbers", "Designing marketing campaigns", "Leading a team", "Understanding legal documents"], field: "multi" },
-      { q: "Rate your interest in analyzing financial data (0–10)", type: "slider", field: "finance" },
-      { q: "Do you enjoy thinking of catchy slogans or ad ideas?", type: "boolean", field: "marketing" },
-      { q: "How confident are you in resolving conflicts between team members? (0–10)", type: "slider", field: "hr" },
-      { q: "Which would you choose for a college competition?", type: "choice", options: ["Debate on legal policies", "Business plan presentation", "Digital branding challenge", "Finance case study"], field: "multi" },
-      { q: "True or False: I like staying updated with business laws.", type: "boolean", field: "law" },
-      { q: "Rate your leadership and decision-making skills (0–10)", type: "slider", field: "hr" },
-      { q: "Would you like to work in a high-paced stock trading environment?", type: "boolean", field: "finance" },
-      { q: "How often do you use tools like Canva, Excel, or social media analytics? (0–10)", type: "slider", field: "marketing" },
-      { q: "Are you someone who likes reading about current policies, rules or laws?", type: "boolean", field: "law" },
+      { q: "What’s your go-to role in a group project?", type: "choice", options: ["Planning and setting goals (Finance)", "Designing the presentation or posters (Marketing)", "Assigning tasks and resolving disputes (HR)", "Researching rules and regulations (Law)"], field: "multi" },
+      { q: "Which of these sounds most interesting to you?", type: "choice", options: ["Tracking market trends and investments", "Running a social media campaign", "Building a strong team and culture", "Reviewing contracts and business laws"], field: "multi" },
+      { q: "You are asked to lead a club in college. What would be your first step?", type: "choice", options: ["Set a clear budget and financial goals", "Brand it with a cool name and logo", "Assign roles and build a team", "Ensure all rules and policies are followed"], field: "multi" },
+      { q: "Which school activity do you enjoy the most?", type: "choice", options: ["Math Olympiads or finance quizzes", "Poster-making or advertisement creation", "Organizing events or managing volunteers", "Debating on laws or writing essays on rights"], field: "multi" },
+      { q: "If given a budget of ₹10,000 for a college fest, what would you do?", type: "choice", options: ["Plan expenses and track ROI", "Design posters and promote online", "Hire volunteers and create schedules", "Get permissions and legal approvals"], field: "multi" },
+      { q: "What kind of news excites you the most?", type: "choice", options: ["Stock market and budget updates", "Marketing trends and brand campaigns", "Job hiring trends and HR policies", "Supreme Court decisions or new laws"], field: "multi" },
+      { q: "Which app do you use the most (or enjoy)?", type: "choice", options: ["Zerodha or Moneycontrol", "Instagram or Canva", "Notion or Trello", "LiveLaw or Bar & Bench"], field: "multi" },
+      { q: "What motivates you the most in a career?", type: "choice", options: ["Financial growth and wealth creation", "Creativity and public influence", "Team success and building people", "Justice and doing the right thing"], field: "multi" },
+      { q: "You have 2 hours free at college. What would you prefer to do?", type: "choice", options: ["Watch finance YouTube channels", "Edit reels or design social content", "Volunteer in student council work", "Read up on constitutional rights"], field: "multi" },
+      { q: "Which course would you prefer to take next semester?", type: "choice", options: ["Investment & Portfolio Management", "Digital Marketing", "Organizational Behavior", "Business & Corporate Law"], field: "multi" },
     ];
 
     const scores = { finance: 0, marketing: 0, hr: 0, law: 0, general: 0 };
@@ -41,6 +41,8 @@
     const progressBar = document.getElementById("progressBar");
     const counter = document.getElementById("counter");
     const startBtn = document.getElementById("startBtn");
+
+    let currentQuestionIndex = 0;
 
     startBtn.onclick = () => {
       startBtn.style.display = "none";
@@ -52,48 +54,54 @@
       quizData.forEach((item, index) => {
         const qWrapper = document.createElement("div");
         qWrapper.className = "bg-gray-50 p-4 rounded-xl shadow";
+        qWrapper.style.display = index === 0 ? "block" : "none";
 
         const qTitle = document.createElement("h3");
         qTitle.className = "text-lg font-semibold mb-3";
         qTitle.textContent = `Q${index + 1}. ${item.q}`;
         qWrapper.appendChild(qTitle);
 
-        if (item.type === "boolean") {
-          ["Yes", "No"].forEach(val => {
-            const label = document.createElement("label");
-            label.className = "block mb-2";
-            label.innerHTML = `<input type="radio" name="q${index}" value="${val === "Yes" ? 1 : 0}" class="mr-2"> ${val}`;
-            qWrapper.appendChild(label);
-          });
-        } else if (item.type === "choice") {
+        if (item.type === "choice") {
           item.options.forEach((opt, idx) => {
             const label = document.createElement("label");
             label.className = "block mb-2";
             label.innerHTML = `<input type="radio" name="q${index}" value="${idx}" class="mr-2"> ${opt}`;
             qWrapper.appendChild(label);
           });
-        } else if (item.type === "slider") {
-          const input = document.createElement("input");
-          input.type = "range";
-          input.min = 0;
-          input.max = 10;
-          input.value = 5;
-          input.name = `q${index}`;
-          input.className = "w-full mb-2";
-          qWrapper.appendChild(input);
         }
+
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = index === quizData.length - 1 ? "Submit" : "Next";
+        nextBtn.className = "mt-4 bg-blue-500 text-white py-2 px-4 rounded";
+        nextBtn.onclick = (e) => {
+          e.preventDefault();
+          const inputs = qWrapper.querySelectorAll("input");
+          let answered = false;
+          inputs.forEach(input => {
+            if (input.checked) answered = true;
+          });
+          if (!answered) {
+            alert("Please answer the question before continuing.");
+            return;
+          }
+
+          form.children[currentQuestionIndex].style.display = "none";
+          currentQuestionIndex++;
+
+          if (currentQuestionIndex < quizData.length) {
+            form.children[currentQuestionIndex].style.display = "block";
+            progressBar.style.width = `${(currentQuestionIndex / quizData.length) * 100}%`;
+            counter.textContent = `${currentQuestionIndex + 1} / ${quizData.length}`;
+          } else {
+            evaluateQuiz();
+          }
+        };
+        qWrapper.appendChild(nextBtn);
 
         form.appendChild(qWrapper);
       });
-
-      const submitBtn = document.createElement("button");
-      submitBtn.textContent = "Submit";
-      submitBtn.className = "w-full py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition mt-6";
-      submitBtn.onclick = (e) => {
-        e.preventDefault();
-        evaluateQuiz();
-      };
-      form.appendChild(submitBtn);
+      progressBar.style.width = `0%`;
+      counter.textContent = `1 / ${quizData.length}`;
     }
 
     function evaluateQuiz() {
@@ -104,12 +112,10 @@
         const field = item.field;
 
         if (field === "multi") {
-          if (value === 0) scores.law++;
-          else if (value === 1) scores.general++;
-          else if (value === 2) scores.marketing++;
-          else if (value === 3) scores.finance++;
-        } else {
-          scores[field] += value;
+          if (value === 0) scores.finance++;
+          else if (value === 1) scores.marketing++;
+          else if (value === 2) scores.hr++;
+          else if (value === 3) scores.law++;
         }
       });
 
