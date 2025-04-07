@@ -136,55 +136,55 @@
         CA: {
           title: "📊 Chartered Accountant (CA)",
           desc: "Master of financial reporting, auditing, and compliance.",
-          salary: "₹8–12 LPA (Source: ICAI)",
+          salary: "₹8–12 LPA",
           link: "https://www.icai.org/"
         },
         ECO: {
           title: "📈 Economist",
           desc: "Analyze economic trends, policies, and data.",
-          salary: "₹10–15 LPA (Source: RBI)",
+          salary: "₹10–15 LPA",
           link: "https://www.rbi.org.in/"
         },
         FINTECH: {
           title: "💻 FinTech Analyst",
           desc: "Solve financial problems with tech and innovation.",
-          salary: "₹6–12 LPA (Source: IBEF)",
+          salary: "₹6–12 LPA",
           link: "https://www.ibef.org/industry/fintech-india"
         },
         DATA: {
           title: "📊 Data Analyst",
           desc: "Use data to drive insights and strategies.",
-          salary: "₹6–10 LPA (Source:Naukri.com)",
+          salary: "₹6–10 LPA",
           link: "https://www.naukri.com/data-analyst-jobs"
         },
         TAX: {
           title: "💼 Tax Consultant",
           desc: "Guide individuals and firms on taxation.",
-          salary: "₹5–9 LPA (Source: ICAI) ",
+          salary: "₹5–9 LPA",
           link: "https://www.icai.org/post.html?post_id=14857"
         },
         HR: {
           title: "🤝 HR Specialist",
           desc: "Build strong teams and manage talent.",
-          salary: "₹5–9 LPA (Source: SHRM)",
+          salary: "₹5–9 LPA",
           link: "https://www.shrm.org/"
         },
         MKT: {
           title: "📢 Marketing Pro",
           desc: "Drive brand strategy and consumer engagement.",
-          salary: "₹6–12 LPA (Source: IIM)",
+          salary: "₹6–12 LPA",
           link: "https://www.iimskills.com/marketing-careers-in-india/"
         },
         CONSULT: {
           title: "🧠 Business Consultant",
           desc: "Solve complex business challenges.",
-          salary: "₹8–14 LPA (Source: Mckinsey)",
+          salary: "₹8–14 LPA",
           link: "https://www.mckinsey.com/"
         },
         ENT: {
           title: "🚀 Entrepreneur",
           desc: "Turn ideas into impactful ventures.",
-          salary: "Income varies widely- Startup India",
+          salary: "Income varies widely",
           link: "https://www.startupindia.gov.in/"
         }
       };
@@ -200,6 +200,10 @@
           </div>
         `;
       });
+
+      resultDiv.innerHTML += `<div class="text-center mt-6">
+        <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" onclick="window.location.reload()">🔄 Retake Quiz</button>
+      </div>`;
     }
 
     startBtn.addEventListener("click", () => {
